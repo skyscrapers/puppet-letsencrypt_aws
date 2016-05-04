@@ -1,0 +1,22 @@
+{
+  "domains": [
+    <% @elbs.each_with_index do |(elb,urls),index| -%>
+    <% if index > 0 -%>
+    ,
+    <% end -%>
+    {
+      "elb": {
+        "name": "<%= elb %>",
+        "listener": {
+          "load_balancer_port": 443,
+          "protocol": "HTTPS",
+          "instance_protocol": "HTTP",
+          "instance_port": 80
+        }
+      },
+      "hosts": <%= urls %>
+    }
+    <% end -%>
+  ],
+  "acme_account_key": "file:///opt/letsencrypt_aws/acme.pem"
+}
