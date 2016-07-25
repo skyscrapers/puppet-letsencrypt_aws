@@ -25,7 +25,7 @@ class letsencrypt_aws::config (){
 
   exec { 'create-listener':
     command     => 'python /opt/letsencrypt_aws/letsencrypt-aws.py update-certificates --force-issue --create-listener',
-    environment => [ "AWS_DEFAULT_REGION=${::region};LETSENCRYPT_AWS_CONFIG=`cat /opt/letsencrypt_aws/config.json`" ],
+    environment => [ "AWS_DEFAULT_REGION=${letsencrypt_aws::region};LETSENCRYPT_AWS_CONFIG=`cat /opt/letsencrypt_aws/config.json`" ],
     path        => '/usr/bin/:/bin/',
     refreshonly => true,
     require     => [File['/opt/letsencrypt_aws/config.json'], Exec['register'], Exec['strip']]
@@ -34,7 +34,7 @@ class letsencrypt_aws::config (){
   cron { 'renew-cert':
     ensure      => present,
     command     => '/usr/bin/python /opt/letsencrypt_aws/letsencrypt-aws.py update-certificates >> /var/log/letsencrypt_aws.log',
-    environment => [ "AWS_DEFAULT_REGION=${::region};LETSENCRYPT_AWS_CONFIG=`cat /opt/letsencrypt_aws/config.json`" ],
+    environment => [ "AWS_DEFAULT_REGION=${letsencrypt_aws::region};LETSENCRYPT_AWS_CONFIG=`cat /opt/letsencrypt_aws/config.json`" ],
     user        => 'root',
     hour        => 1,
     minute      => 0,
